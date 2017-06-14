@@ -7,7 +7,9 @@ Aim is to create a webpage that is constantly updated with random numbers from a
 """
 
 # Start with a basic flask app webpage.
-from flask.ext.socketio import SocketIO, emit
+import eventlet
+eventlet.monkey_patch()
+from flask_socketio import SocketIO, emit
 from flask import Flask, render_template, url_for, copy_current_request_context
 from random import random
 from time import sleep
@@ -21,7 +23,9 @@ app.config['SECRET_KEY'] = 'secret!'
 app.config['DEBUG'] = True
 
 #turn the flask app into a socketio app
-socketio = SocketIO(app)
+async_mode = “eventlet”
+
+socketio = SocketIO(app, async_mode=async_mode)
 
 #random number Generator Thread
 thread = Thread()
